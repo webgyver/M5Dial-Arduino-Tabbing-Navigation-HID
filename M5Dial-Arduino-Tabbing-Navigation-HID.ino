@@ -1,23 +1,14 @@
-/*
-
-  Inspired by https://github.com/aadfPT/m5dial-media-controller
-
-  To use BLE instead of USB remove the following comment, install 
-  https://github.com/T-vK/ESP32-BLE-Keyboard#installation and
-  activate NimBLE.
-
-*/
-#define USE_BLE_INSTEAD_OF_USB 1
+// #define USE_BLE_INSTEAD_OF_USB 1
 
 #include <M5Dial.h>
 
 #ifdef USE_BLE_INSTEAD_OF_USB
-  #include <BleKeyboard.h>
-  BleKeyboard keyboard("Tabbigator");
+#include <BleKeyboard.h>
+BleKeyboard keyboard("Tabbigator");
 #else
-  #include <USB.h>
-  #include <USBHIDKeyboard.h>
-  USBHIDKeyboard keyboard;
+#include <USB.h>
+#include <USBHIDKeyboard.h>
+USBHIDKeyboard keyboard;
 #endif
 
 
@@ -40,22 +31,22 @@ void setup() {
   M5Dial.Display.fillCircle(size / 2, size / 2, size / 3, BLUE);
 
   keyboard.begin();
-  #ifndef USE_BLE_INSTEAD_OF_USB
-    USB.begin();
-  #endif
+#ifndef USE_BLE_INSTEAD_OF_USB
+  USB.begin();
+#endif
 
   last_interaction = millis();
 }
 
 
 void loop() {
-  M5Dial.update();  
+  M5Dial.update();
 
   // on touch -> send space
   if (M5Dial.Touch.getDetail().state == m5::touch_state_t::touch_begin) {
     Serial.println("on_touch");
     M5Dial.Speaker.tone(6000, 20);
-    keyboard.write(0x20); // ASCII for spacebar
+    keyboard.write(0x20);  // ASCII for spacebar
     last_interaction = millis();
     M5Dial.Display.wakeup();
   }
